@@ -1,4 +1,4 @@
-# *(Fork)* fetch-cookie [![Build Status](https://travis-ci.org/Fabitee/fetch-cookie.svg?branch=master)](https://travis-ci.org/Fabitee/fetch-cookie)
+# *(Fork)* fetch-cookie [![Build Status](https://travis-ci.org/Fabitee/fetch-cookie.svg?branch=master)](https://travis-ci.org/Fabitee/fetch-cookie) [![Known Vulnerabilities](https://snyk.io/test/github/Fabitee/fetch-cookie/badge.svg?targetFile=package.json)](https://snyk.io/test/github/Fabitee/fetch-cookie?targetFile=package.json)
 > This a fork of [valeriangalliat/fetch-cookie](https://github.com/valeriangalliat/fetch-cookie) which will be updated to work with current `node-fetch` and `tough-cookie` versions.
 
 ---
