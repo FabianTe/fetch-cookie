@@ -15,8 +15,14 @@ app.get('/set-multiple', (req, res) => {
   res.end()
 })
 
+// Returns all cookies that the client sent via req as a string array
 app.get('/get', (req, res) => {
-  res.end(req.headers.cookie)
+  // Get cookies
+  let cookies = req.headers.cookie
+  if (!Array.isArray(cookies))
+    cookies = [cookies];
+
+  res.json(cookies);
 })
 
 app.get('/redirect', (req, res) => {
