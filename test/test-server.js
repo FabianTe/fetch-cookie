@@ -19,10 +19,9 @@ app.get('/set-multiple', (req, res) => {
 app.get('/get', (req, res) => {
   // Get cookies
   let cookies = req.headers.cookie
-  if (!Array.isArray(cookies))
-    cookies = [cookies];
+  if (!Array.isArray(cookies)) { cookies = [cookies] }
 
-  res.json(cookies);
+  res.json(cookies)
 })
 
 app.get('/redirect', (req, res) => {
