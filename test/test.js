@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 
-const { equal } = require('assert')
+const { assert } = require('chai')
 const nodeFetch = require('node-fetch')
 const fetch = require('../')(nodeFetch)
 const app = require('./test-server')
@@ -19,7 +19,7 @@ describe('fetch-cookie', () => {
   it('should handle cookies', async () => {
     await fetch('http://localhost:9999/set?name=foo&value=bar')
     const res = await fetch('http://localhost:9999/get')
-    equal(await res.text(), 'foo=bar')
+    assert.deepEqual(await res.json(), ['foo=bar'])
   })
 
   it('should handle cookies jars', async () => {
@@ -31,11 +31,11 @@ describe('fetch-cookie', () => {
     await fetch('http://localhost:9999/set?name=foo&value=bar2', cookieJar2)
     const res2 = await fetch('http://localhost:9999/get', cookieJar2)
 
-    equal(await res1.text(), 'foo=bar')
-    equal(cookieJar1.headers.cookie, 'foo=bar')
+    assert.deepEqual(await res1.json(), ['foo=bar'])
+    assert.equal(cookieJar1.headers.cookie, 'foo=bar')
 
-    equal(await res2.text(), 'foo=bar2')
-    equal(cookieJar2.headers.cookie, 'foo=bar2')
+    assert.deepEqual(await res2.json(), ['foo=bar2'])
+    assert.equal(cookieJar2.headers.cookie, 'foo=bar2')
   })
 
   after('stop test server', () => {
