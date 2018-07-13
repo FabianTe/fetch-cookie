@@ -12,7 +12,7 @@ app.get('/set', (req, res) => {
 // Responds with two cookies. We want to cause a 'set-cookie' header with a comma in the cookie to be able to test
 // correct parsing on the client side.
 app.get('/set-multiple', (req, res) => {
-  res.cookie('foo', 'bar', { expires: new Date() }) // The date will contain a comma. eg: Mon, 17-Jul-2017 16:06:00 GMT
+  res.cookie('foo', 'bar', { expires: new Date(2000, 0, 1) }) // The date will contain a comma. eg: Mon, 17-Jul-2017 16:06:00 GMT
   res.cookie('tuna', 'can')
   res.end()
 })
