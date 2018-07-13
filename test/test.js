@@ -54,7 +54,8 @@ describe('fetch-cookie', () => {
     assert.notProperty(cookies2, cookie1)
   })
 
-  it.skip('should handle cookies jars (DEPRECATED)', async () => {
+  // TODO: Remove this test once node-fetch v1 is not supported anymore
+  it('should handle cookies jars (DEPRECATED)', async () => {
     const cookieJar1 = {}
     const cookieJar2 = {}
     await fetch('http://localhost:9999/set?name=foo&value=bar', cookieJar1)
@@ -68,6 +69,31 @@ describe('fetch-cookie', () => {
 
     assert.deepEqual(await res2.json(), ['foo=bar2'])
     assert.equal(cookieJar2.headers.cookie, 'foo=bar2')
+  })
+
+  it("should handle multiple cookies (including comma in 'expires' option)", async () => {
+    const jar = new CookieJar()
+    const fetch = require('../index')(nodeFetch, jar)
+    await fetch('http://localhost:9999/set-multiple')
+    const cookies = jar.store.idx.localhost['/']
+
+    assert.property(cookies, 'foo')
+    /** @type {Cookie} */
+    const cookie1 = cookies.foo
+    assert.instanceOf(cookie1, Cookie)
+    assert.propertyVal(cookie1, 'value', 'bar')
+    assert.property(cookie1, 'expires')
+    assert.instanceOf(cookie1.expires, Date)
+
+    assert.property(cookies, 'tuna')
+    /** @type {Cookie} */
+    const cookie2 = cookies.tuna
+    assert.instanceOf(cookie2, Cookie)
+    assert.propertyVal(cookie2, 'value', 'can')
+
+    // Compare the two cookies
+    assert.notEqual(cookie1, cookie2)
+    assert.notStrictEqual(cookie1.key, cookie2.key)
   })
 
   after('stop test server', () => {

@@ -1,13 +1,13 @@
 var denodeify = require('es6-denodeify')(Promise)
-var tough = require('tough-cookie')
+var { CookieJar } = require('tough-cookie')
 
 /**
  * @param {*} fetch Fetch function which will be called to perform the HTTP request
- * @param {tough.CookieJar} jar Custom tough-cookie CookieJar instance
+ * @param {CookieJar} jar Custom tough-cookie CookieJar instance
  */
 module.exports = function fetchCookieDecorator (fetch, jar) {
   fetch = fetch || window.fetch
-  jar = jar || new tough.CookieJar()
+  jar = jar || new CookieJar()
 
   var getCookieString = denodeify(jar.getCookieString.bind(jar))
   var setCookie = denodeify(jar.setCookie.bind(jar))
@@ -22,15 +22,17 @@ module.exports = function fetchCookieDecorator (fetch, jar) {
         }))
       })
       .then(function (res) {
-        var cookies
+        var cookies = []
 
         if (res.headers.getAll) {
           // node-fetch v1
           cookies = res.headers.getAll('set-cookie')
         } else {
           // node-fetch v2
-          var cookie = res.headers.get('set-cookie')
-          cookies = cookie.split(',') || [] // FIXME: This is broken. See issue #1
+          const headers = res.headers.raw()
+          if (headers['set-cookie'] !== undefined) {
+            cookies = headers['set-cookie']
+          }
         }
 
         if (!cookies.length) {
