@@ -38,6 +38,12 @@ describe('fetch-cookie', () => {
     equal(cookieJar2.headers.cookie, 'foo=bar2')
   })
 
+  it.skip('should handle multiple cookies (including commata)', async () => {
+    const cookieJar1 = {}
+    await fetch('http://localhost:9999/set-multiple', cookieJar1)
+    const res = await fetch('http://localhost:9999/get', cookieJar1)
+  })
+
   after('stop test server', () => {
     if (server) { server.close() }
   })

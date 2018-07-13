@@ -2,16 +2,18 @@ const express = require('express')
 
 const app = express()
 
-// Respons with a 'set-cookie' header with a single cookie with only a name and value created by the URL params
+// Responds with a 'set-cookie' header with a single cookie with only a name and value created by the URL params
 app.get('/set', (req, res) => {
   const { name, value } = req.query
   res.set('set-cookie', `${name}=${value}`)
   res.end()
 })
 
+// Responds with two cookies. We want to cause a 'set-cookie' header with a comma in the cookie to be able to test
+// correct parsing on the client side.
 app.get('/set-multiple', (req, res) => {
-  res.append('set-cookie', 'foo=bat; expires=Mon, 17-Jul-2017 16:06:00 GMT; Max-Age=31449600; Path=/; secure')
-  res.append('set-cookie', 'tuna=can')
+  res.cookie('foo', 'bar', { expires: new Date() }) // The date will contain a comma. eg: Mon, 17-Jul-2017 16:06:00 GMT
+  res.cookie('tuna', 'can')
   res.end()
 })
 
