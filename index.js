@@ -1,5 +1,6 @@
 var denodeify = require('es6-denodeify')(Promise)
 var tough = require('tough-cookie')
+var cookieParser = require('set-cookie-parser');
 
 module.exports = function fetchCookieDecorator (fetch, jar) {
   fetch = fetch || window.fetch
@@ -13,25 +14,43 @@ module.exports = function fetchCookieDecorator (fetch, jar) {
 
     return getCookieString(url)
       .then(function (cookie) {
+        // Not copying 
+        var headers = opts.headers || new fetch.Headers();
+
+        if (headers instanceof fetch.Headers) {
+          // Headers instance
+          headers.set('cookie', cookie);
+        } else {
+          // header object ie: { "content-type": "..." }
+          headers['cookie'] = cookie;
+        }
+        
         return fetch(url, Object.assign(opts, {
-          headers: Object.assign(opts.headers || {}, (cookie ? { cookie: cookie } : {}))
+          headers: headers
         }))
       })
       .then(function (res) {
-        var cookies
+        var cookies;
 
         if (res.headers.getAll) {
-          // node-fetch v1
-          cookies = res.headers.getAll('set-cookie')
-        } else {
+          // node-fetch v1 - deprecated!
+          // TODO: Add test - this might not work anymore.
+          cookies = res.headers.getAll('set-cookie');
+        } else if (res.headers.get) {
           // node-fetch v2
-          var cookie = res.headers.get('set-cookie')
-          cookies = cookie && cookie.split(',') || []
+          var headerStr = res.headers.get('set-cookie')
+          cookies = cookieParser.parse(headerStr);
+        } else {
+          // object ie: { "content-type": "..." }
+          var headerStr = res.headers['set-cookie'];
+          cookies = cookieParser.parse(headerStr);
         }
 
         if (!cookies.length) {
-          return res
+          return res;
         }
+
+        cookies = cookies.map(c => new tough.Cookie(c));
 
         return Promise.all(cookies.map(function (cookie) {
           return setCookie(cookie, res.url)

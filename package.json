@@ -26,9 +26,11 @@
   },
   "dependencies": {
     "es6-denodeify": "^0.1.1",
+    "set-cookie-parser": "^2.2.1",
     "tough-cookie": "^2.3.1"
   },
   "devDependencies": {
+    "@types/set-cookie-parser": "0.0.2",
     "express": "^4.14.1",
     "mocha": "^3.2.0",
     "node-fetch": "^2.1.2",
