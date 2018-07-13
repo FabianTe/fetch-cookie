@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@types/set-cookie-parser": "0.0.2",
+    "cookie-parser": "^1.4.3",
     "express": "^4.14.1",
     "mocha": "^3.2.0",
     "node-fetch": "^2.1.2",

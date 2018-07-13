@@ -1,38 +1,14 @@
 /* eslint-env mocha */
 
 const { equal } = require('assert')
-const express = require('express')
 const nodeFetch = require('node-fetch')
 const fetch = require('../')(nodeFetch)
-
-const app = express();
-var server;
-
-app.get('/set', (req, res) => {
-  res.set('set-cookie', 'foo=bar')
-  res.end()
-})
-
-app.get('/set2', (req, res) => {
-  res.set('set-cookie', 'foo=bar2')
-  res.end()
-})
-
-app.get('/set-multiple', (req, res) => {
-  res.append('set-cookie', 'foo=bat; expires=Mon, 17-Jul-2017 16:06:00 GMT; Max-Age=31449600; Path=/; secure')
-  res.append('set-cookie', 'tuna=can')
-  res.end();
-})
-
-app.get('/get', (req, res) => {
-  res.end(req.headers.cookie)
-})
-
-app.get('/redirect', (req, res) => {
-  res.redirect('http://localhost:9998/get') // FIXME: There is nothing at this port ...
-})
+const { CookieJar } = require('tough-cookie')
+const app = require('./test-server');
 
 describe('fetch-cookie', () => {
+  let server;
+
   before('start test server', async () => {
     return new Promise((resolve, reject) => {
       server = app.listen(9999, (err) => {
@@ -44,7 +20,14 @@ describe('fetch-cookie', () => {
     })
   })
 
-  it.only('should handle cookies', async () => {
+  it.only('should store single cookie', async () => {
+    // const jar = new CookieJar();
+    // const fetch = require('../')(nodeFetch, jar);
+    // const cookie = { name: 'foo', value: 'bar' };
+    // const create = await fetch(`http://localhost:9999/set-single?name=${cookie.name}&value=${cookie.value}`);
+    // const res = await fetch('http://localhost:9999/get');
+    // equal(await res.text(), `${cookie.name}=${cookie.value}`);
+
     await fetch('http://localhost:9999/set');
     const res = await fetch('http://localhost:9999/get');
     equal(await res.text(), 'foo=bar');
