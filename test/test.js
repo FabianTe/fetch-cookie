@@ -48,10 +48,10 @@ describe('fetch-cookie', () => {
     assert.propertyVal(cookie2, 'value', 'can')
 
     // Compare the two clients (jars)
-    assert.notEqual(cookie1, cookie2);
-    assert.notStrictEqual(cookie1.key, cookie2.key);
-    assert.notProperty(cookies1, cookie2);
-    assert.notProperty(cookies2, cookie1);
+    assert.notEqual(cookie1, cookie2)
+    assert.notStrictEqual(cookie1.key, cookie2.key)
+    assert.notProperty(cookies1, cookie2)
+    assert.notProperty(cookies2, cookie1)
   })
 
   it.skip('should handle cookies jars (DEPRECATED)', async () => {
