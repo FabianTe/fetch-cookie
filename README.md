@@ -1,4 +1,7 @@
-# fetch-cookie [![npm version](http://img.shields.io/npm/v/fetch-cookie.svg?style=flat-square)](https://www.npmjs.org/package/fetch-cookie)
+# *(Fork)* fetch-cookie [![Build Status](https://travis-ci.org/Fabitee/fetch-cookie.svg?branch=master)](https://travis-ci.org/Fabitee/fetch-cookie)
+> This a fork of [valeriangalliat/fetch-cookie](https://github.com/valeriangalliat/fetch-cookie) which will be updated to work with current `node-fetch` and `tough-cookie` versions.
+
+---
 
 > Decorator for a `fetch` function to support automatic cookies.
 
