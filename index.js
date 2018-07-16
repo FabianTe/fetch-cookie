@@ -12,7 +12,12 @@ module.exports = function fetchCookieDecorator (fetch, jar) {
   var getCookieString = denodeify(jar.getCookieString.bind(jar))
   var setCookie = denodeify(jar.setCookie.bind(jar))
 
-  return function fetchCookie (url, opts) {
+  /**
+   * @param {string|Request} url URL string or a [Request](https://developer.mozilla.org/en-US/docs/Web/API/Request) instance
+   * @param {object} opts
+   * @returns {Promise<Response>}
+   */
+  function fetchCookie (url, opts) {
     opts = opts || {}
 
     return getCookieString(url)
@@ -46,4 +51,6 @@ module.exports = function fetchCookieDecorator (fetch, jar) {
         })
       })
   }
+
+  return fetchCookie
 }
