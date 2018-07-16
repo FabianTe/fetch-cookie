@@ -17,15 +17,15 @@ describe('fetch-cookie', () => {
     })
   })
 
+  it('should a Request object', async () => {
+    const res = await fetch(new nodeFetch.Request({ url: 'http://localhost:9999/get' }))
+    assert.propertyVal(res, 'status', 200)
+  })
+
   it('should handle cookies (using internal cookie jar)', async () => {
     await fetch('http://localhost:9999/set?name=foo&value=bar')
     const res = await fetch('http://localhost:9999/get')
     assert.deepEqual(await res.json(), ['foo=bar'])
-  })
-
-  it('should a Request object', async () => {
-    const res = await fetch(new nodeFetch.Request({ url: 'http://localhost:9999/get' }))
-    assert.propertyVal(res, 'status', 200)
   })
 
   // This test esentially tests if to clients with different jars are completely separated and don't share state
