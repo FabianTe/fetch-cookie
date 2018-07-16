@@ -1,9 +1,14 @@
-# *(Fork)* fetch-cookie [![npm version](https://badge.fury.io/js/fetch-cookie-v2.svg)](https://badge.fury.io/js/fetch-cookie-v2) [![Build Status](https://travis-ci.org/Fabitee/fetch-cookie-v2.svg?branch=master)](https://travis-ci.org/Fabitee/fetch-cookie-v2) [![Known Vulnerabilities](https://snyk.io/test/github/Fabitee/fetch-cookie-v2/badge.svg?targetFile=package.json)](https://snyk.io/test/github/Fabitee/fetch-cookie-v2?targetFile=package.json)
+# fetch-cookie-v2 [![npm version](https://badge.fury.io/js/fetch-cookie-v2.svg)](https://badge.fury.io/js/fetch-cookie-v2) [![Build Status](https://travis-ci.org/Fabitee/fetch-cookie-v2.svg?branch=master)](https://travis-ci.org/Fabitee/fetch-cookie-v2) [![Known Vulnerabilities](https://snyk.io/test/github/Fabitee/fetch-cookie-v2/badge.svg?targetFile=package.json)](https://snyk.io/test/github/Fabitee/fetch-cookie-v2?targetFile=package.json)
 > This a fork of [valeriangalliat/fetch-cookie](https://github.com/valeriangalliat/fetch-cookie). It will be updated to work with current `node-fetch` and `tough-cookie` versions.
 
 ---
 
 > Decorator for a `fetch` function to support automatic cookies.
+
+Roadmap
+-------
+
+**Warning:** The way this package works is subject to change. While `fetch-cookie` is decorating a given `fetch` function, this package will be reworked to depend on `node-fetch` since most NodeJS projects working with a `fetch` function will propably already use `node-fetch`.
 
 Description
 -----------
