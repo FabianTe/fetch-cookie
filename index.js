@@ -2,6 +2,14 @@ var denodeify = require('es6-denodeify')(Promise)
 var { CookieJar } = require('tough-cookie')
 
 /**
+ * @param {Response} response
+ * @returns {boolean}
+ */
+function isRedirect (response) {
+  return response.status >= 300 && response.status < 400
+}
+
+/**
  * @param {*} fetch Fetch function which will be called to perform the HTTP request
  * @param {CookieJar} jar Custom tough-cookie CookieJar instance
  */
@@ -26,11 +34,18 @@ module.exports = function fetchCookieDecorator (fetch, jar) {
       opts = url
       url = opts.url
     } else { opts = opts || {} }
+
     const cookie = await getCookieString(url)
     const headers = Object.assign(opts.headers || {}, (cookie ? { cookie: cookie } : {}))
+
     opts = Object.assign(opts, {
       headers: headers
     })
+
+    // Custom redirects
+    opts.redirect = "manual"
+    opts.counter = opts.counter || 0;
+    opts.follow = opts.follow || 20;
 
     // Actual request
     const res = await fetch(url, opts)
@@ -51,15 +66,41 @@ module.exports = function fetchCookieDecorator (fetch, jar) {
       }
     }
 
-    // Do nothing if no cookies present
-    if (!cookies.length) {
-      return res
-    }
-
     // Store all present cookies
-    await Promise.all(cookies.map((cookie) => {
-      return setCookie(cookie, res.url)
-    }))
+    await Promise.all(cookies.map((cookie) => setCookie(cookie, res.url)))
+
+    // Follow a possible redirect
+    if (isRedirect(res)) {
+      const location = res.headers.get('location');
+      
+      // HTTP-redirect fetch step 2
+      if (!location)
+        return res;
+
+      // HTTP-redirect fetch step 5
+      if (opts.counter >= opts.follow)
+        throw new Error(`maximum redirect reached at: ${opts.url}`)
+      
+      // HTTP-redirect fetch step 6 (counter increment)
+      // Prepare a new Request object.
+      const redirectOpts = Object.assign({}, opts);
+      redirectOpts.counter++;
+
+      // HTTP-redirect fetch step 9
+      if (res.statusCode !== 303 && opts.body && getTotalBytes(opts) === null) {
+        throw new FetchError('Cannot follow redirect with body being a readable stream', 'unsupported-redirect');
+      }
+
+      // HTTP-redirect fetch step 11
+      if (res.status === 303 || ((res.status === 301 || res.status === 302) && opts.method === 'POST')) {
+        redirectOpts.method = 'GET';
+        redirectOpts.body = undefined;
+        delete (redirectOpts.headers['content-length']);
+      }
+
+      // HTTP-redirect fetch step 15
+      return fetchCookie(location, redirectOpts);
+    }
 
     return res
   }
