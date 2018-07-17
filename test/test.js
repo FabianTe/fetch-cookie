@@ -104,7 +104,7 @@ describe('fetch-cookie', () => {
   it('should store cookies present on a redirect response', async () => {
     // Client 1
     const jar = new CookieJar()
-    const fetch = require('../index')(nodeFetch, jar)
+    const fetch = require('../index')(nodeFetch, jar, true)
     // This route should send a redirect response with status 302 but also want the client to set a cookie
     const res = await fetch('http://localhost:9999/redirect')
 
