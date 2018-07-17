@@ -1,6 +1,6 @@
 {
   "name": "fetch-cookie-v2",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Fork of fetch-cookie compatible with node-fetch version 2. Cookie parsing for node-fetch!",
   "homepage": "https://github.com/Fabitee/fetch-cookie-v2",
   "bugs": "https://github.com/Fabitee/fetch-cookie-v2/issues",
