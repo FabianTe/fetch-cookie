@@ -1,5 +1,5 @@
 var denodeify = require('es6-denodeify')(Promise)
-var { CookieJar, Cookie } = require('tough-cookie')
+var { CookieJar } = require('tough-cookie')
 
 /**
  * @param {*} fetch Fetch function which will be called to perform the HTTP request
@@ -25,8 +25,7 @@ module.exports = function fetchCookieDecorator (fetch, jar) {
     if (typeof url === 'object') {
       opts = url
       url = opts.url
-    } else
-      opts = opts || {}
+    } else { opts = opts || {} }
     const cookie = await getCookieString(url)
     const headers = Object.assign(opts.headers || {}, (cookie ? { cookie: cookie } : {}))
     opts = Object.assign(opts, {
@@ -43,7 +42,7 @@ module.exports = function fetchCookieDecorator (fetch, jar) {
       cookies = res.headers.getAll('set-cookie')
       console.warn("You are using a fetch version that supports 'Headers.getAll' which is deprecated!")
       console.warn("In the future 'fetch-cookie-v2' may discontinue supporting that fetch implementation.")
-      console.warn("Details: https://developer.mozilla.org/en-US/docs/Web/API/Headers/getAll")
+      console.warn('Details: https://developer.mozilla.org/en-US/docs/Web/API/Headers/getAll')
     } else {
       // node-fetch v2
       const headers = res.headers.raw()
