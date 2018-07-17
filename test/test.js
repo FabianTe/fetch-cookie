@@ -101,6 +101,24 @@ describe('fetch-cookie', () => {
     assert.notStrictEqual(cookie1.key, cookie2.key)
   })
 
+  it('should store cookies present on a redirect response', async () => {
+    // Client 1
+    const jar = new CookieJar()
+    const fetch = require('../index')(nodeFetch, jar)
+    // This route should send a redirect response with status 302 but also want the client to set a cookie
+    const res = await fetch('http://localhost:9999/redirect')
+
+    // Check if cookie from the redirect response is present
+    assert.property(jar.store.idx, 'localhost', "Missing 'localhost' property in jar! Likely the cookie wasn't set during the redirect!")
+    assert.property(jar.store.idx.localhost, '/', "Missing '/' property in jar! Likely the cookie wasn't set during the redirect!")
+    const cookies = jar.store.idx.localhost['/']
+    assert.property(cookies, 'redirect', 'Redirect cookie not present!')
+    assert.property(cookies.redirect, 'value', 'hello', 'Redirect cookie value missing!')
+
+    // Check if the redirect worked
+    assert.deepEqual(await res.json(), ['redirect=hello'])
+  })
+
   after('stop test server', () => {
     if (server) { server.close() }
   })

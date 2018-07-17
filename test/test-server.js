@@ -27,7 +27,8 @@ app.get('/get', (req, res) => {
 })
 
 app.get('/redirect', (req, res) => {
-  res.redirect('http://localhost:9998/get') // FIXME: There is nothing at this port ...
+  res.cookie('redirect', 'hello')
+  res.redirect('http://localhost:9999/get')
 })
 
 module.exports = app
